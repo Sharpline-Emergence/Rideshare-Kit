@@ -195,12 +195,14 @@ a{color:#16191F}a:hover{color:#4A5260}
 /* Sends each reservation to Formspree (emails you) and Supabase (your master list), then shows the thank-you page. */
 var SUPABASE_URL = 'https://pvpmjmalwjzqehqbvinp.supabase.co';
 var SUPABASE_KEY = 'sb_publishable_y-M5GWJJZCnAdCIOcKCMZw_EkzbqHIg'; // publishable key: safe in a web page
+var SOURCE = ((new URLSearchParams(location.search).get('src') || 'direct').replace(/[^a-z0-9_-]/gi, '').slice(0, 60)) || 'direct'; // e.g. ?src=fb-yvr
 var CONSENT_TEXT = 'Yes, email me when the Rideshare Tax Kit is ready, with my founding price. I can unsubscribe at any time.';
 
 document.getElementById('reserve-form').addEventListener('submit', async function (e) {
   e.preventDefault();
   var form = e.target, btn = form.querySelector('button[type="submit"]'), msg = document.getElementById('form-msg');
   var data = new FormData(form);
+  data.append('source', SOURCE);
   if (data.get('_gotcha')) { window.location.href = 'thanks.html'; return; } // spam bot
   btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = '';
 
@@ -218,7 +220,8 @@ document.getElementById('reserve-form').addEventListener('submit', async functio
       drives_lyft: data.get('platform_lyft') === 'Yes',
       drives_other: data.get('platform_other') === 'Yes',
       consent_email: data.get('consent_email') === 'Yes',
-      consent_text: CONSENT_TEXT
+      consent_text: CONSENT_TEXT,
+      source: SOURCE
     })
   }).then(function (r) { return r.ok || r.status === 409; }) // 409 = already reserved: fine
     .catch(function () { return false; });
