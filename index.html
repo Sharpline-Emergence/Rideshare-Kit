@@ -187,19 +187,41 @@ a{color:#16191F}a:hover{color:#4A5260}
 
 </div>
 <script>
-/* Sends the reservation to Formspree, then shows the thank-you page. */
+/* Sends each reservation to Formspree (emails you) and Supabase (your master list), then shows the thank-you page. */
+var SUPABASE_URL = 'https://pvpmjmalwjzqehqbvinp.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_y-M5GWJJZCnAdCIOcKCMZw_EkzbqHIg'; // publishable key: safe in a web page
+var CONSENT_TEXT = 'Yes, email me when the Rideshare Tax Kit is ready, with my founding price. I can unsubscribe at any time.';
+
 document.getElementById('reserve-form').addEventListener('submit', async function (e) {
   e.preventDefault();
   var form = e.target, btn = form.querySelector('button[type="submit"]'), msg = document.getElementById('form-msg');
+  var data = new FormData(form);
+  if (data.get('_gotcha')) { window.location.href = 'thanks.html'; return; } // spam bot
   btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = '';
-  try {
-    var res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } });
-    if (res.ok) { window.location.href = 'thanks.html'; return; }
-    throw new Error();
-  } catch (err) {
-    msg.textContent = 'Sorry, that didn’t go through. Please try again in a minute.';
-    btn.disabled = false; btn.textContent = 'Reserve my C$39 copy';
-  }
+
+  var toFormspree = fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } })
+    .then(function (r) { return r.ok; }).catch(function () { return false; });
+
+  var toSupabase = fetch(SUPABASE_URL + '/rest/v1/rtk_reservations', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({
+      first_name: (data.get('first_name') || '').trim(),
+      email: (data.get('email') || '').trim(),
+      province: data.get('province'),
+      drives_uber: data.get('platform_uber') === 'Yes',
+      drives_lyft: data.get('platform_lyft') === 'Yes',
+      drives_other: data.get('platform_other') === 'Yes',
+      consent_email: data.get('consent_email') === 'Yes',
+      consent_text: CONSENT_TEXT
+    })
+  }).then(function (r) { return r.ok || r.status === 409; }) // 409 = already reserved: fine
+    .catch(function () { return false; });
+
+  var results = await Promise.all([toFormspree, toSupabase]);
+  if (results[0] || results[1]) { window.location.href = 'thanks.html'; return; }
+  msg.textContent = 'Sorry, that didn’t go through. Please try again in a minute.';
+  btn.disabled = false; btn.textContent = 'Reserve my C$39 copy';
 });
 </script>
 </body>
