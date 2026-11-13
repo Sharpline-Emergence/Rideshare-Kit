@@ -20,8 +20,31 @@ a{color:#16191F}a:hover{color:#4A5260}
 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#1F6B45" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin: 0 auto"><path d="M5 12l5 5L20 7"></path></svg>
 <h1 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 34px; line-height: 1.15">You’re on the list</h1>
 <p style="margin: 0; font-size: 18px; color: #3A414D; line-height: 1.55">Your C$39 founding price (GST/HST included) is reserved. We’ll send you one email when the Rideshare Tax Kit is ready. Nothing to pay until then.</p>
+<p style="margin: 8px 0 0; font-size: 16px; color: #3A414D">Know another driver who’d want this?</p>
+<div style="display: flex; justify-content: center"><button type="button" class="share-btn" style="font: inherit; font-weight: 700; font-size: 16px; background: #F5C518; color: #16191F; border: 0; border-radius: 12px; padding: 14px 22px; min-height: 48px; cursor: pointer; display: inline-flex; align-items: center; gap: 10px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16191F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"></path><path d="M16 6l-4-4-4 4"></path><path d="M12 2v13"></path></svg>Share with a driver</button></div>
+<p class="share-msg" role="status" style="margin: 0; font-size: 15px; font-weight: 600; color: #1F6B45"></p>
 <a href="./" style="font-weight: 600; min-height: 44px; display: inline-flex; align-items: center; justify-content: center">← Back to the Rideshare Tax Kit</a>
 </main>
 </div>
+<script>
+/* "Share with a driver": opens the phone's share menu, or copies the link on a computer. */
+document.querySelectorAll('.share-btn').forEach(function (btn) {
+  btn.addEventListener('click', async function () {
+    var url = 'https://ridesharetaxkit.com/?src=share';
+    var msg = document.querySelector('.share-msg');
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Rideshare Tax Kit', text: 'GST, mileage and T2125 sorted for Uber and Lyft drivers in Canada:', url: url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      if (msg) msg.textContent = 'Link copied – paste it into a text or message.';
+    } catch (e) {
+      if (e && e.name === 'AbortError') return; // closed the share menu
+      if (msg) msg.textContent = 'Copy this link: ' + url;
+    }
+  });
+});
+</script>
 </body>
 </html>
