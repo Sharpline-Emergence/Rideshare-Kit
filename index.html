@@ -263,5 +263,20 @@ document.querySelectorAll('.share-btn').forEach(function (btn) {
   });
 });
 </script>
+<script>
+/* Visit counter: logs one visit per browser session to Supabase (no cookies, no personal data). */
+(function () {
+  try {
+    if (navigator.webdriver) return;                         // skip automated browsers
+    try { if (sessionStorage.getItem('rtk_counted')) return; sessionStorage.setItem('rtk_counted', '1'); } catch (e) {}
+    var src = ((new URLSearchParams(location.search).get('src') || 'direct').replace(/[^a-z0-9_-]/gi, '').slice(0, 60)) || 'direct';
+    fetch('https://pvpmjmalwjzqehqbvinp.supabase.co/rest/v1/rtk_visits', {
+      method: 'POST', keepalive: true,
+      headers: { 'apikey': 'sb_publishable_y-M5GWJJZCnAdCIOcKCMZw_EkzbqHIg', 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ source: src, page: 'home' })
+    }).catch(function () {});
+  } catch (e) {}
+})();
+</script>
 </body>
 </html>
