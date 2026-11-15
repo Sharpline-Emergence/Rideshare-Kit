@@ -124,29 +124,6 @@ a{color:#16191F}a:hover{color:#4A5260}
 <label for="email" style="font-weight: 600; font-size: 15px">Email</label>
 <input id="email" name="email" type="email" required autocomplete="email" style="font: inherit; padding: 12px 14px; border: 1.5px solid #B9B5AA; border-radius: 10px; min-height: 48px; box-sizing: border-box">
 </div>
-<div style="display: flex; flex-direction: column; gap: 6px">
-<label for="prov" style="font-weight: 600; font-size: 15px">Province</label>
-<select id="prov" name="province" style="font: inherit; padding: 12px 14px; border: 1.5px solid #B9B5AA; border-radius: 10px; min-height: 48px; box-sizing: border-box; background: #FFFFFF">
-<option>British Columbia</option>
-<option>Alberta</option>
-<option>Saskatchewan</option>
-<option>Manitoba</option>
-<option>Ontario</option>
-<option>New Brunswick</option>
-<option>Nova Scotia</option>
-<option>Prince Edward Island</option>
-<option>Newfoundland and Labrador</option>
-<option>Yukon, NWT or Nunavut</option>
-</select>
-</div>
-<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
-<legend style="font-weight: 600; font-size: 15px; padding: 0; margin-bottom: 8px">I drive for</legend>
-<div style="display: flex; flex-wrap: wrap; gap: 16px">
-<label style="display: flex; gap: 8px; align-items: center; min-height: 44px"><input type="checkbox" name="platform_uber" value="Yes" style="width: 20px; height: 20px">Uber</label>
-<label style="display: flex; gap: 8px; align-items: center; min-height: 44px"><input type="checkbox" name="platform_lyft" value="Yes" style="width: 20px; height: 20px">Lyft</label>
-<label style="display: flex; gap: 8px; align-items: center; min-height: 44px"><input type="checkbox" name="platform_other" value="Yes" style="width: 20px; height: 20px">Other</label>
-</div>
-</fieldset>
 <label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer"><input type="checkbox" name="consent_email" value="Yes" required style="width: 20px; height: 20px; margin-top: 2px; flex: 0 0 auto"><span>Yes, email me when the Rideshare Tax Kit is ready, with my founding price. I can unsubscribe at any time.</span></label>
 <button type="submit" style="font: inherit; font-weight: 700; font-size: 17px; background: #F5C518; color: #16191F; border: 0; border-radius: 12px; padding: 16px; min-height: 52px; cursor: pointer">Reserve my C$39 copy</button>
 <p id="form-msg" role="alert" style="margin: 0; font-size: 15px; font-weight: 600; color: #B42318; text-align: center"></p>
@@ -226,10 +203,6 @@ document.getElementById('reserve-form').addEventListener('submit', async functio
     body: JSON.stringify({
       first_name: (data.get('first_name') || '').trim(),
       email: (data.get('email') || '').trim(),
-      province: data.get('province'),
-      drives_uber: data.get('platform_uber') === 'Yes',
-      drives_lyft: data.get('platform_lyft') === 'Yes',
-      drives_other: data.get('platform_other') === 'Yes',
       consent_email: data.get('consent_email') === 'Yes',
       consent_text: CONSENT_TEXT,
       source: SOURCE
