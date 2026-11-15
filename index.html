@@ -124,6 +124,7 @@ a{color:#16191F}a:hover{color:#4A5260}
 <label for="email" style="font-weight: 600; font-size: 15px">Email</label>
 <input id="email" name="email" type="email" required autocomplete="email" style="font: inherit; padding: 12px 14px; border: 1.5px solid #B9B5AA; border-radius: 10px; min-height: 48px; box-sizing: border-box">
 </div>
+<label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer; background: #F7F6F2; border-radius: 10px; padding: 12px"><input type="checkbox" name="beta_interest" value="Yes" style="width: 20px; height: 20px; margin-top: 2px; flex: 0 0 auto"><span><strong>Optional:</strong> I’d like to be one of 6 drivers who test the kit free before launch (late November – mid December) and share honest feedback.</span></label>
 <label style="display: flex; gap: 12px; align-items: flex-start; font-size: 15px; line-height: 1.45; cursor: pointer"><input type="checkbox" name="consent_email" value="Yes" required style="width: 20px; height: 20px; margin-top: 2px; flex: 0 0 auto"><span>Yes, email me when the Rideshare Tax Kit is ready, with my founding price. I can unsubscribe at any time.</span></label>
 <button type="submit" style="font: inherit; font-weight: 700; font-size: 17px; background: #F5C518; color: #16191F; border: 0; border-radius: 12px; padding: 16px; min-height: 52px; cursor: pointer">Reserve my C$39 copy</button>
 <p id="form-msg" role="alert" style="margin: 0; font-size: 15px; font-weight: 600; color: #B42318; text-align: center"></p>
@@ -204,6 +205,7 @@ document.getElementById('reserve-form').addEventListener('submit', async functio
       first_name: (data.get('first_name') || '').trim(),
       email: (data.get('email') || '').trim(),
       consent_email: data.get('consent_email') === 'Yes',
+      beta_interest: data.get('beta_interest') === 'Yes',
       consent_text: CONSENT_TEXT,
       source: SOURCE
     })
