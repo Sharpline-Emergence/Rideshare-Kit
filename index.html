@@ -27,7 +27,8 @@ a{color:#16191F}a:hover{color:#4A5260}
 @media (max-width:640px){.compare{font-size:15px}.compare .c{width:24%}}
 </style>
 
-<style>html{scroll-behavior:smooth}
+<style>html{scroll-behavior:smooth;scroll-padding-top:90px}
+@media (max-width:640px){.topbar .brand-sub{display:none}.topbar nav a{font-size:14px !important}}
 @media (max-width:640px){
   h1{font-size:34px !important;line-height:1.12 !important}
   h2{font-size:27px !important}
@@ -37,18 +38,20 @@ a{color:#16191F}a:hover{color:#4A5260}
 </head>
 <body>
 
-<div style="width: 100%; background: #F7F6F2; color: #16191F; font-family: Inter, system-ui, sans-serif; font-size: 17px; line-height: 1.55">
+<div id="top" style="width: 100%; background: #F7F6F2; color: #16191F; font-family: Inter, system-ui, sans-serif; font-size: 17px; line-height: 1.55">
 
-<header style="max-width: 1120px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between">
-<div style="display: flex; align-items: center; gap: 10px">
+<div class="topbar" style="position: sticky; top: 0; z-index: 50; background: rgba(247,246,242,0.97); border-bottom: 1px solid #E4E1D8">
+<header style="max-width: 1120px; margin: 0 auto; padding: 12px 24px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between">
+<a href="./" aria-label="Rideshare Tax Kit home" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #16191F">
 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16191F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19h16"></path><path d="M6 15l3-8h6l3 8"></path><path d="M12 7v12"></path></svg>
-<span style="display: flex; flex-direction: column; line-height: 1.15"><span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em">Rideshare Tax Kit</span><span style="font-size: 13px; color: #4A5260">built for Canadian drivers</span></span>
-</div>
+<span style="display: flex; flex-direction: column; line-height: 1.15"><span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.01em">Rideshare Tax Kit</span><span class="brand-sub" style="font-size: 13px; color: #4A5260">built for Canadian drivers</span></span>
+</a>
 <nav style="display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center">
 <a href="mileage.html" style="font-weight: 600; font-size: 15px; padding: 10px 2px; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Free mileage log</a>
 <a href="#reserve" style="font-weight: 600; font-size: 15px; text-decoration: none; padding: 10px 16px; border: 2px solid #16191F; border-radius: 10px; min-height: 44px; box-sizing: border-box; display: inline-flex; align-items: center">Reserve C$29 price</a>
 </nav>
 </header>
+</div>
 
 <section class="hero" style="max-width: 1120px; margin: 0 auto; padding: 48px 24px 72px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
 <div style="flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: 22px">
@@ -165,6 +168,7 @@ a{color:#16191F}a:hover{color:#4A5260}
 <a href="#reserve" style="flex: 1 1 240px; text-align: center; background: #F5C518; color: #16191F; font-weight: 700; font-size: 17px; text-decoration: none; padding: 16px 20px; border-radius: 12px; min-height: 52px; box-sizing: border-box">Lock in the C$29 founding price</a>
 </div>
 <p style="margin: 0; font-size: 14px; color: #4A5260; text-align: center">GST/HST included. Full kit launches December 15.</p>
+<p style="margin: 0; text-align: center"><a href="#top" style="font-weight: 600; font-size: 15px; display: inline-flex; align-items: center; min-height: 44px">↑ Back to top</a></p>
 </section>
 
 <section style="background: #EFEDE6">
