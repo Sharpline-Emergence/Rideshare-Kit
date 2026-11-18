@@ -338,17 +338,40 @@ document.querySelectorAll('.share-btn').forEach(function (btn) {
 });
 </script>
 <script>
-/* Visit counter: logs one visit per browser session to Supabase (no cookies, no personal data). */
+/* Visit counter: counts a real person once per browser session (no cookies, no personal data).
+   Only counts after the page has been on screen for 3 seconds AND the visitor has scrolled, tapped or typed,
+   so Facebook link previews, background pre-loading and bots are not counted.
+   Your own visits: open the site once with ?owner=1 on each phone/computer to stop counting yourself (?owner=off to undo). */
 (function () {
   try {
-    if (navigator.webdriver) return;                         // skip automated browsers
-    try { if (sessionStorage.getItem('rtk_counted')) return; sessionStorage.setItem('rtk_counted', '1'); } catch (e) {}
-    var src = ((new URLSearchParams(location.search).get('src') || 'direct').replace(/[^a-z0-9_-]/gi, '').slice(0, 60)) || 'direct';
-    fetch('https://pvpmjmalwjzqehqbvinp.supabase.co/rest/v1/rtk_visits', {
-      method: 'POST', keepalive: true,
-      headers: { 'apikey': 'sb_publishable_y-M5GWJJZCnAdCIOcKCMZw_EkzbqHIg', 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ source: src, page: 'home' })
-    }).catch(function () {});
+    var q = new URLSearchParams(location.search);
+    if (q.has('owner')) { try { if (q.get('owner') === 'off') localStorage.removeItem('rtk_owner'); else localStorage.setItem('rtk_owner', '1'); } catch (e) {} }
+    try { if (localStorage.getItem('rtk_owner')) return; } catch (e) {}
+    if (navigator.webdriver) return;
+    if (/bot|crawl|spider|preview|facebookexternalhit|facebot|meta-external|headless|lighthouse|slurp/i.test(navigator.userAgent)) return;
+    var KEY = 'rtk_counted';
+    try { if (sessionStorage.getItem(KEY)) return; } catch (e) {}
+    var src = ((q.get('src') || 'direct').replace(/[^a-z0-9_-]/gi, '').slice(0, 60)) || 'direct';
+    var seen = false, acted = false, sent = false, timer = null;
+    function send() {
+      if (sent || !seen || !acted) return;
+      sent = true;
+      try { sessionStorage.setItem(KEY, '1'); } catch (e) {}
+      fetch('https://pvpmjmalwjzqehqbvinp.supabase.co/rest/v1/rtk_visits', {
+        method: 'POST', keepalive: true,
+        headers: { 'apikey': 'sb_publishable_y-M5GWJJZCnAdCIOcKCMZw_EkzbqHIg', 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ source: src, page: 'home' })
+      }).catch(function () {});
+    }
+    function onScreen() {
+      if (document.prerendering || document.visibilityState !== 'visible') { clearTimeout(timer); timer = null; return; }
+      if (!timer && !seen) timer = setTimeout(function () { seen = true; send(); }, 3000);
+    }
+    function onAction() { acted = true; send(); }
+    ['scroll', 'pointerdown', 'touchstart', 'keydown'].forEach(function (ev) { addEventListener(ev, onAction, { passive: true, once: true }); });
+    document.addEventListener('visibilitychange', onScreen);
+    document.addEventListener('prerenderingchange', onScreen);
+    onScreen();
   } catch (e) {}
 })();
 </script>
