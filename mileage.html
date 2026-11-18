@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://ridesharetaxkit.com/mileage.html">
+<title>Free Mileage Tracker for Uber &amp; Lyft Drivers in Canada — Rideshare Tax Kit</title>
+<meta name="description" content="A free, simple mileage log for Canadian Uber and Lyft drivers. Log each shift's odometer readings on your phone and see your business-use percentage for the year. No app, no account.">
+<meta name="theme-color" content="#16191F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mileage Log">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F7F6F2;color:#16191F;font-family:Inter,system-ui,sans-serif;font-size:17px;line-height:1.55}
+a{color:#16191F}a:hover{color:#4A5260}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+h1,h2,.brand{font-family:'Space Grotesk',sans-serif;letter-spacing:-0.01em}
+h1{font-size:40px;line-height:1.1;margin:8px 0 10px}
+h2{font-size:24px;line-height:1.2;margin:0}
+.eyebrow{margin:0;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#4A5260}
+.muted{color:#3A414D}
+.small{font-size:14px;color:#4A5260}
+.card{background:#FFF;border:1px solid #DEDBD2;border-radius:18px;padding:22px;margin:18px 0;box-shadow:0 10px 30px rgba(22,25,31,.06)}
+.card.dark{background:#16191F;color:#F7F6F2;border-color:#16191F}
+.card.dark .muted,.card.dark .small{color:#C9CCD3}
+.card.yellow{background:#FFF8D6;border-color:#F0DC80}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:1fr 1fr}
+@media (max-width:560px){.g2{grid-template-columns:1fr}h1{font-size:32px}}
+label{font-weight:600;font-size:15px;display:block;margin-bottom:6px}
+input[type=text],input[type=email],input[type=number],input[type=date]{font:inherit;width:100%;padding:12px 14px;border:1.5px solid #B9B5AA;border-radius:10px;min-height:48px;box-sizing:border-box;background:#FFF;color:#16191F}
+input:focus{outline:3px solid #F5C518;outline-offset:1px}
+.btn{font:inherit;font-weight:700;font-size:17px;background:#F5C518;color:#16191F;border:0;border-radius:12px;padding:14px 20px;min-height:50px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.dark{background:#16191F;color:#FFF}
+.btn.ghost{background:transparent;border:2px solid #16191F}
+.card.dark .btn.ghost{border-color:#F7F6F2;color:#F7F6F2}
+.btn.full{width:100%}
+.btn:disabled{opacity:.6;cursor:default}
+.linkbtn{font:inherit;background:none;border:0;padding:8px 0;text-decoration:underline;cursor:pointer;color:inherit;font-size:15px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stat{background:#F7F6F2;border-radius:12px;padding:12px}
+.card.dark .stat{background:#252A33}
+.stat b{display:block;font-family:'Space Grotesk',sans-serif;font-size:26px;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat span{font-size:13px;color:#4A5260}
+.card.dark .stat span{color:#C9CCD3}
+.big{font-family:'Space Grotesk',sans-serif;font-size:56px;font-weight:700;line-height:1;color:#F5C518;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:15px;font-variant-numeric:tabular-nums}
+th{text-align:left;font-size:13px;color:#4A5260;font-weight:600;padding:8px 6px;border-bottom:2px solid #16191F}
+td{padding:10px 6px;border-bottom:1px solid #ECEAE3}
+.r{text-align:right}
+.del{font:inherit;font-size:13px;background:none;border:1px solid #DEDBD2;border-radius:8px;padding:6px 10px;cursor:pointer;color:#4A5260;min-height:34px}
+.del.armed{background:#B42318;color:#FFF;border-color:#B42318}
+.msg{margin:10px 0 0;font-size:15px;font-weight:600}
+.msg.err{color:#B42318}.msg.ok{color:#1F6B45}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.lock{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #ECEAE3;font-size:16px}
+.lock em{font-style:normal;color:#9A968B;white-space:nowrap}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.45;font-weight:400;cursor:pointer}
+.check input{width:20px;height:20px;margin-top:2px;flex:0 0 auto}
+select{font:inherit;padding:8px 10px;border-radius:10px;border:1.5px solid #B9B5AA;background:#FFF;min-height:40px}
+.hidden{display:none !important}
+details summary{cursor:pointer;font-weight:600}
+</style>
+</head>
+<body>
+
+<header style="background:#16191F;color:#F7F6F2">
+  <div class="wrap" style="padding-top:14px;padding-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:12px">
+    <a href="./" style="color:#F7F6F2;text-decoration:none;line-height:1.15">
+      <span class="brand" style="font-weight:700;font-size:19px;display:block">Rideshare Tax Kit</span>
+      <span style="font-size:12px;color:#C9CCD3">built for Canadian drivers</span>
+    </a>
+    <a href="./#reserve" style="color:#F5C518;font-weight:600;font-size:14px">Get the full kit →</a>
+  </div>
+</header>
+
+<main class="wrap" style="padding-bottom:40px">
+
+  <section style="padding-top:22px">
+    <p class="eyebrow">Free · for Uber &amp; Lyft drivers in Canada</p>
+    <h1>Free rideshare mileage log</h1>
+    <p class="muted" style="margin:0">Enter two odometer numbers each shift. It adds up your business kilometres and works out your <strong>business-use percentage</strong>, the number every vehicle claim depends on. No app, no account. Your log stays on this phone.</p>
+  </section>
+
+  <!-- Home-screen tip: shown until dismissed -->
+  <div id="tip" class="card yellow">
+    <h2 style="font-size:19px">Do this first: add it to your home screen</h2>
+    <p style="margin:8px 0 0;font-size:15px"><strong>iPhone:</strong> in Safari, tap the Share button, then <em>Add to Home Screen</em>. <strong>Android:</strong> in Chrome, tap the ⋮ menu, then <em>Add to Home screen</em>.</p>
+    <p style="margin:8px 0 0;font-size:15px">Then always open it from that icon. On iPhones, the home-screen version keeps its own log, separate from Safari, and it’s far less likely to be cleared.</p>
+    <button type="button" class="linkbtn" id="tip-close">Got it, hide this</button>
+  </div>
+
+  <!-- Log a shift -->
+  <section class="card">
+    <h2>Log a shift</h2>
+    <form id="shift-form" class="grid" style="margin-top:14px" novalidate>
+      <div>
+        <label for="s-date">Shift date</label>
+        <input id="s-date" type="date" required>
+      </div>
+      <div class="grid g2">
+        <div>
+          <label for="s-start">Start odometer (km)</label>
+          <input id="s-start" type="number" inputmode="numeric" min="0" step="1" required>
+        </div>
+        <div>
+          <label for="s-end">End odometer (km)</label>
+          <input id="s-end" type="number" inputmode="numeric" min="0" step="1" required>
+        </div>
+      </div>
+      <div>
+        <label for="s-note">Note <span class="small" style="font-weight:400">(optional, e.g. “Uber + Lyft, Abbotsford”)</span></label>
+        <input id="s-note" type="text" maxlength="80">
+      </div>
+      <button class="btn dark full" type="submit">Save shift</button>
+      <p id="shift-msg" class="msg" role="status"></p>
+    </form>
+  </section>
+
+  <!-- Backup nudge: appears after 10 shifts if no recent backup -->
+  <section id="backup-nudge" class="card yellow hidden">
+    <h2 style="font-size:19px">Your log only lives on this phone</h2>
+    <p style="margin:8px 0 12px;font-size:15px">If you clear your browser, lose your phone or switch phones, it’s gone. Take 10 seconds to save a backup copy, and email it to yourself.</p>
+    <div class="row">
+      <button type="button" class="btn dark" data-export>Download backup</button>
+      <button type="button" class="btn ghost" id="nudge-remind">Remind me at tax time</button>
+    </div>
+    <button type="button" class="linkbtn" id="nudge-close">Not now</button>
+  </section>
+
+  <!-- Year summary -->
+  <section class="card dark">
+    <div class="row" style="justify-content:space-between">
+      <h2>Your year so far</h2>
+      <select id="year" aria-label="Year"></select>
+    </div>
+    <div style="margin-top:16px">
+      <div class="big" id="pct">–</div>
+      <p class="small" style="margin:6px 0 0" id="pct-label">Business-use percentage. Enter your odometer readings below to see it.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="st-biz">0</b><span>business km</span></div>
+      <div class="stat"><b id="st-total">–</b><span>total km driven</span></div>
+      <div class="stat"><b id="st-shifts">0</b><span>shifts logged</span></div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div>
+        <label for="o-start" style="color:#F7F6F2">Odometer on Jan 1 <span style="font-weight:400;color:#C9CCD3">(or the day you started driving)</span></label>
+        <input id="o-start" type="number" inputmode="numeric" min="0" step="1">
+      </div>
+      <div>
+        <label for="o-latest" style="color:#F7F6F2">Odometer today <span style="font-weight:400;color:#C9CCD3">(update now and then)</span></label>
+        <input id="o-latest" type="number" inputmode="numeric" min="0" step="1">
+      </div>
+    </div>
+    <p class="small" style="margin:10px 0 0">Total km covers <em>all</em> driving, personal included. Business km is only what you drove on shift. CRA expects you to be able to show both.</p>
+    <p id="odo-warn" class="msg err hidden" style="color:#FF9C8F"></p>
+  </section>
+
+  <!-- Paid teaser -->
+  <section class="card">
+    <p class="eyebrow">In the full kit</p>
+    <h2 style="margin-top:4px">What is <span id="teaser-pct">your percentage</span> worth in dollars?</h2>
+    <p class="muted" style="margin:8px 0 12px;font-size:16px">Your business-use % is applied to all your car costs. The Rideshare Tax Kit does that math, along with your GST.</p>
+    <div class="lock"><span>Car costs (fuel, insurance, repairs…)</span><em>🔒 full kit</em></div>
+    <div class="lock"><span>Vehicle costs you can claim</span><em>🔒 full kit</em></div>
+    <div class="lock"><span>GST you can claim back (input tax credits)</span><em>🔒 full kit</em></div>
+    <div class="lock" style="border:0"><span>T2125 year-end summary &amp; accountant page</span><em>🔒 full kit</em></div>
+    <a class="btn full" href="./#reserve" style="margin-top:12px">See the kit · founding price C$39</a>
+  </section>
+
+  <!-- Email sign-up -->
+  <section class="card" id="signup">
+    <div id="signup-form-wrap">
+      <h2>Free: the rideshare driver tax checklist</h2>
+      <p class="muted" style="margin:8px 0 14px;font-size:16px">Everything the CRA expects from Uber and Lyft drivers on one page. We’ll also send one reminder before tax time to export your mileage log.</p>
+      <form id="signup-form" action="https://formspree.io/f/xkolnkyg" method="post" class="grid">
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+        <div>
+          <label for="fname">First name</label>
+          <input id="fname" name="first_name" type="text" required autocomplete="given-name">
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email">
+        </div>
+        <label class="check"><input type="checkbox" name="consent_email" value="Yes" required><span>Yes, email me about the Rideshare Tax Kit, including my founding price when it launches. I can unsubscribe at any time.</span></label>
+        <button type="submit" class="btn full">Send me the free checklist</button>
+        <p id="signup-msg" class="msg err" role="alert"></p>
+        <p class="small" style="margin:0;text-align:center">Free. Your mileage log is never sent anywhere. Sent by Sharpline Emergence Ltd. · <a href="privacy.html">Privacy Policy</a></p>
+      </form>
+    </div>
+    <div id="signup-done" class="hidden" style="text-align:center">
+      <h2>You’re on the list ✓</h2>
+      <p class="muted" style="margin:8px 0 14px">Here’s your checklist. Save it to your phone or print it for the car.</p>
+      <a class="btn dark" href="Rideshare-Driver-Tax-Checklist.pdf" download>Open the checklist (PDF)</a>
+    </div>
+  </section>
+
+  <!-- Shift list -->
+  <section class="card">
+    <div class="row" style="justify-content:space-between">
+      <h2>Your shifts</h2>
+      <span class="small" id="list-count"></span>
+    </div>
+    <div id="months" style="margin-top:12px"></div>
+    <details style="margin-top:14px">
+      <summary>Show every shift</summary>
+      <div style="overflow-x:auto;margin-top:10px">
+        <table>
+          <thead><tr><th>Date</th><th class="r">Start</th><th class="r">End</th><th class="r">km</th><th></th></tr></thead>
+          <tbody id="shift-rows"></tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <!-- Backup / restore -->
+  <section class="card">
+    <h2>Back up or move your log</h2>
+    <p class="muted" style="margin:8px 0 12px;font-size:16px">Download a spreadsheet file (CSV) of every shift. It opens in Excel, Numbers or Google Sheets. Keep it as your CRA record, or load it on a new phone.</p>
+    <div class="row">
+      <button type="button" class="btn dark" data-export>Download backup</button>
+      <label class="btn ghost" style="margin:0;font-size:17px">Restore from backup<input type="file" id="import" accept=".csv,text/csv" class="hidden"></label>
+    </div>
+    <p class="small" id="last-backup" style="margin:10px 0 0"></p>
+    <p id="import-msg" class="msg" role="status"></p>
+  </section>
+
+  <p class="small" style="margin-top:28px">This free log is a record-keeping tool and does not provide tax, legal or accounting advice. Confirm your obligations with the Canada Revenue Agency or a qualified accountant. Not affiliated with Uber, Lyft or the CRA. © Sharpline Emergence Ltd.</p>
+</main>
+
+<script>
+/* ===== Settings: same Formspree form and Supabase list as the landing page ===== */
+var SUPABASE_URL = 'https://pvpmjmalwjzqehqbvinp.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_y-M5GWJJZCnAdCIOcKCMZw_EkzbqHIg'; // publishable key: safe in a web page
+var CONSENT_TEXT = 'Yes, email me about the Rideshare Tax Kit, including my founding price when it launches. I can unsubscribe at any time.';
+var BACKUP_NUDGE_AFTER = 10;   // shifts logged before the "back up your log" box appears
+var STORE_KEY = 'rtk_mileage_v1';
+
+/* ===== Saved data (lives only in this browser) ===== */
+var data = load();
+function blank() { return { shifts: [], odo: {}, signedUp: false, nudgeHiddenAt: 0, lastExport: 0, tipHidden: false }; }
+function load() {
+  try { var d = JSON.parse(localStorage.getItem(STORE_KEY)); if (d && d.shifts) return Object.assign(blank(), d); } catch (e) {}
+  return blank();
+}
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); return true; }
+  catch (e) { flash('shift-msg', 'Your browser won’t let this page save (private browsing?). Open it in a normal window.', true); return false; }
+}
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {} // ask the browser not to clear it
+
+/* ===== Helpers ===== */
+var $ = function (id) { return document.getElementById(id); };
+var fmt = function (n) { return Math.round(n).toLocaleString('en-CA'); };
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function today() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function flash(id, text, isErr) { var el = $(id); el.textContent = text; el.className = 'msg ' + (isErr ? 'err' : 'ok'); }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function sortShifts() { data.shifts.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : a.start - b.start; }); }
+
+/* ===== Log a shift ===== */
+$('s-date').value = today();
+$('shift-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var date = $('s-date').value, start = Number($('s-start').value), end = Number($('s-end').value), note = $('s-note').value.trim();
+  if (!date) return flash('shift-msg', 'Pick the shift date.', true);
+  if (!$('s-start').value || !$('s-end').value) return flash('shift-msg', 'Enter both odometer readings.', true);
+  if (end <= start) return flash('shift-msg', 'End odometer must be higher than start.', true);
+  if (end - start > 1500) return flash('shift-msg', 'That’s over 1,500 km in one shift. Check the numbers.', true);
+  data.shifts.push({ id: Date.now().toString(36), date: date, start: start, end: end, note: note });
+  sortShifts();
+  if (!save()) return;
+  flash('shift-msg', 'Saved: ' + fmt(end - start) + ' business km.', false);
+  $('s-start').value = ''; $('s-end').value = ''; $('s-note').value = '';
+  $('s-start').placeholder = 'Last end: ' + end;
+  $('year').dataset.pick = date.slice(0, 4);
+  render();
+});
+
+/* ===== Odometer readings for the year ===== */
+['o-start', 'o-latest'].forEach(function (id) {
+  $(id).addEventListener('change', function () {
+    var y = $('year').value, v = $(id).value === '' ? null : Number($(id).value);
+    data.odo[y] = data.odo[y] || {};
+    data.odo[y][id === 'o-start' ? 'start' : 'latest'] = v;
+    save(); render();
+  });
+});
+$('year').addEventListener('change', function () { $('year').dataset.pick = $('year').value; render(); });
+
+/* ===== Draw everything ===== */
+function render() {
+  // year picker: this year plus any year with shifts
+  var years = {}; years[String(new Date().getFullYear())] = 1;
+  data.shifts.forEach(function (s) { years[s.date.slice(0, 4)] = 1; });
+  var list = Object.keys(years).sort().reverse();
+  var pick = $('year').dataset.pick || $('year').value || list[0];
+  if (list.indexOf(pick) < 0) pick = list[0];
+  $('year').innerHTML = list.map(function (y) { return '<option' + (y === pick ? ' selected' : '') + '>' + y + '</option>'; }).join('');
+  var Y = pick;
+
+  var shifts = data.shifts.filter(function (s) { return s.date.slice(0, 4) === Y; });
+  var biz = shifts.reduce(function (t, s) { return t + (s.end - s.start); }, 0);
+  var odo = data.odo[Y] || {};
+  var maxEnd = shifts.reduce(function (m, s) { return Math.max(m, s.end); }, 0);
+  var latest = odo.latest != null ? odo.latest : (maxEnd || null);
+  $('o-start').value = odo.start != null ? odo.start : '';
+  $('o-latest').value = odo.latest != null ? odo.latest : '';
+  $('o-latest').placeholder = maxEnd ? 'Using last shift: ' + maxEnd : '';
+
+  var total = (odo.start != null && latest != null) ? latest - odo.start : null;
+  var warn = '';
+  if (total != null && total <= 0) { warn = 'Today’s odometer must be higher than your Jan 1 reading.'; total = null; }
+  else if (total != null && biz > total) { warn = 'Your business km are higher than total km. Check your Jan 1 and today’s readings.'; }
+  $('odo-warn').textContent = warn; $('odo-warn').classList.toggle('hidden', !warn);
+
+  $('st-biz').textContent = fmt(biz);
+  $('st-shifts').textContent = shifts.length;
+  $('st-total').textContent = total != null ? fmt(total) : '–';
+  if (total && !warn) {
+    var pct = Math.round(biz / total * 100);
+    $('pct').textContent = pct + '%';
+    $('pct-label').textContent = 'Business-use percentage for ' + Y + ': ' + fmt(biz) + ' of ' + fmt(total) + ' km were for Uber or Lyft.';
+    $('teaser-pct').textContent = 'your ' + pct + '%';
+  } else {
+    $('pct').textContent = '–';
+    $('pct-label').textContent = 'Business-use percentage. Enter your Jan 1 odometer reading below to see it.';
+    $('teaser-pct').textContent = 'your percentage';
+  }
+
+  // monthly totals
+  var byMonth = {};
+  shifts.forEach(function (s) { var m = Number(s.date.slice(5, 7)) - 1; byMonth[m] = byMonth[m] || { km: 0, n: 0 }; byMonth[m].km += s.end - s.start; byMonth[m].n++; });
+  var ms = Object.keys(byMonth).map(Number).sort(function (a, b) { return b - a; });
+  $('months').innerHTML = ms.length
+    ? '<table><thead><tr><th>Month</th><th class="r">Business km</th><th class="r">Shifts</th></tr></thead><tbody>' +
+      ms.map(function (m) { return '<tr><td>' + MONTHS[m] + '</td><td class="r">' + fmt(byMonth[m].km) + '</td><td class="r">' + byMonth[m].n + '</td></tr>'; }).join('') + '</tbody></table>'
+    : '<p class="muted" style="margin:0">No shifts logged for ' + Y + ' yet.</p>';
+  $('list-count').textContent = shifts.length ? shifts.length + ' in ' + Y : '';
+
+  $('shift-rows').innerHTML = shifts.slice().reverse().map(function (s) {
+    return '<tr><td>' + s.date + (s.note ? '<br><span class="small">' + esc(s.note) + '</span>' : '') + '</td><td class="r">' + fmt(s.start) + '</td><td class="r">' + fmt(s.end) +
+      '</td><td class="r"><strong>' + fmt(s.end - s.start) + '</strong></td><td class="r"><button type="button" class="del" data-id="' + s.id + '">Delete</button></td></tr>';
+  }).join('');
+
+  // tip, backup nudge, sign-up state
+  $('tip').classList.toggle('hidden', !!data.tipHidden);
+  var lastShift = data.shifts.length ? data.shifts[data.shifts.length - 1] : null;
+  if (lastShift && !$('s-start').placeholder) $('s-start').placeholder = 'Last end: ' + lastShift.end;
+  var month = 30 * 864e5, now = Date.now();
+  var needsBackup = data.shifts.length >= BACKUP_NUDGE_AFTER && now - (data.lastExport || 0) > month && now - (data.nudgeHiddenAt || 0) > 7 * 864e5;
+  $('backup-nudge').classList.toggle('hidden', !needsBackup);
+  $('nudge-remind').classList.toggle('hidden', !!data.signedUp);
+  $('signup-form-wrap').classList.toggle('hidden', !!data.signedUp);
+  $('signup-done').classList.toggle('hidden', !data.signedUp);
+  $('last-backup').textContent = data.lastExport ? 'Last backup: ' + new Date(data.lastExport).toLocaleDateString('en-CA') : 'No backup downloaded yet.';
+}
+
+/* Delete: tap once to arm, tap again to confirm */
+$('shift-rows').addEventListener('click', function (e) {
+  var b = e.target.closest('.del'); if (!b) return;
+  if (!b.classList.contains('armed')) { b.classList.add('armed'); b.textContent = 'Tap to confirm'; setTimeout(function () { b.classList.remove('armed'); b.textContent = 'Delete'; }, 4000); return; }
+  data.shifts = data.shifts.filter(function (s) { return s.id !== b.dataset.id; });
+  save(); render();
+});
+
+$('tip-close').addEventListener('click', function () { data.tipHidden = true; save(); render(); });
+$('nudge-close').addEventListener('click', function () { data.nudgeHiddenAt = Date.now(); save(); render(); });
+$('nudge-remind').addEventListener('click', function () { signupSource = 'tracker-backup'; $('signup').scrollIntoView({ behavior: 'smooth' }); setTimeout(function () { $('fname').focus(); }, 500); });
+
+/* ===== Backup (CSV) and restore ===== */
+document.querySelectorAll('[data-export]').forEach(function (b) { b.addEventListener('click', exportCSV); });
+function csvCell(v) { v = String(v == null ? '' : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+function exportCSV() {
+  var lines = ['Rideshare Tax Kit - free mileage log', 'Year,Odometer Jan 1,Odometer latest'];
+  Object.keys(data.odo).sort().forEach(function (y) { lines.push([y, data.odo[y].start, data.odo[y].latest].map(csvCell).join(',')); });
+  lines.push('', 'Date,Start odometer,End odometer,Business km,Note');
+  data.shifts.forEach(function (s) { lines.push([s.date, s.start, s.end, s.end - s.start, s.note].map(csvCell).join(',')); });
+  var blob = new Blob([lines.join('\r\n')], { type: 'text/csv' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'mileage-log-' + today() + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  data.lastExport = Date.now(); save(); render();
+}
+function parseCSVLine(line) {
+  var out = [], cur = '', q = false;
+  for (var i = 0; i < line.length; i++) {
+    var c = line[i];
+    if (q) { if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (c === '"') q = false; else cur += c; }
+    else if (c === '"') q = true; else if (c === ',') { out.push(cur); cur = ''; } else cur += c;
+  }
+  out.push(cur); return out;
+}
+$('import').addEventListener('change', function (e) {
+  var file = e.target.files[0]; if (!file) return;
+  file.text().then(function (text) {
+    var mode = '', added = 0, seen = {};
+    data.shifts.forEach(function (s) { seen[s.date + '|' + s.start + '|' + s.end] = 1; });
+    text.split(/\r?\n/).forEach(function (line) {
+      if (!line.trim()) return;
+      var c = parseCSVLine(line);
+      if (c[0] === 'Year') { mode = 'odo'; return; }
+      if (c[0] === 'Date') { mode = 'shifts'; return; }
+      if (mode === 'odo' && /^\d{4}$/.test(c[0])) {
+        data.odo[c[0]] = { start: c[1] === '' ? null : Number(c[1]), latest: c[2] === '' ? null : Number(c[2]) };
+      } else if (mode === 'shifts' && /^\d{4}-\d{2}-\d{2}$/.test(c[0])) {
+        var s = Number(c[1]), en = Number(c[2]), key = c[0] + '|' + s + '|' + en;
+        if (en > s && !seen[key]) { data.shifts.push({ id: (Date.now() + added).toString(36) + added, date: c[0], start: s, end: en, note: c[4] || '' }); seen[key] = 1; added++; }
+      }
+    });
+    sortShifts(); save(); render();
+    flash('import-msg', added ? 'Restored ' + added + ' shift' + (added === 1 ? '' : 's') + '.' : 'No new shifts found in that file. Is it a backup from this page?', !added);
+    e.target.value = '';
+  });
+});
+
+/* ===== Email sign-up: Formspree (emails you) + Supabase (master list), same as the landing page ===== */
+var signupSource = 'tracker';
+$('signup-form').addEventListener('submit', async function (e) {
+  e.preventDefault();
+  var form = e.target, btn = form.querySelector('button[type="submit"]'), msg = $('signup-msg');
+  if (!form.checkValidity()) { msg.textContent = 'Please add your name and email, and tick the box.'; return; }
+  var fd = new FormData(form);
+  if (fd.get('_gotcha')) return;
+  var ref = ((new URLSearchParams(location.search).get('src') || '').replace(/[^a-z0-9_-]/gi, '').slice(0, 40));
+  var source = signupSource + (ref ? '-' + ref : '');
+  fd.append('source', source);
+  btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = '';
+
+  var toFormspree = fetch(form.action, { method: 'POST', body: fd, headers: { 'Accept': 'application/json' } })
+    .then(function (r) { return r.ok; }).catch(function () { return false; });
+  var toSupabase = fetch(SUPABASE_URL + '/rest/v1/rtk_reservations', {
+    method: 'POST',
+    headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+    body: JSON.stringify({
+      first_name: (fd.get('first_name') || '').trim(),
+      email: (fd.get('email') || '').trim(),
+      consent_email: fd.get('consent_email') === 'Yes',
+      beta_interest: false,
+      consent_text: CONSENT_TEXT,
+      source: source
+    })
+  }).then(function (r) { return r.ok || r.status === 409; }).catch(function () { return false; });
+
+  var results = await Promise.all([toFormspree, toSupabase]);
+  if (results[0] || results[1]) { data.signedUp = true; save(); render(); return; }
+  msg.textContent = 'Sorry, that didn’t go through. Please try again in a minute.';
+  btn.disabled = false; btn.textContent = 'Send me the free checklist';
+});
+
+render();
+
+/* Visit counter: one visit per browser session (no cookies, no personal data). */
+(function () {
+  try {
+    if (navigator.webdriver) return;
+    try { if (sessionStorage.getItem('rtk_counted_tracker')) return; sessionStorage.setItem('rtk_counted_tracker', '1'); } catch (e) {}
+    var src = ((new URLSearchParams(location.search).get('src') || 'direct').replace(/[^a-z0-9_-]/gi, '').slice(0, 60)) || 'direct';
+    fetch(SUPABASE_URL + '/rest/v1/rtk_visits', {
+      method: 'POST', keepalive: true,
+      headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ source: src, page: 'tracker' })
+    }).catch(function () {});
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
