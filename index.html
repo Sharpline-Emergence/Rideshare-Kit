@@ -27,6 +27,42 @@ a{color:#16191F}a:hover{color:#4A5260}
 @media (max-width:640px){.compare{font-size:15px}.compare .c{width:24%}}
 </style>
 
+<script>document.documentElement.classList.add('js')</script>
+<style>
+/* hero phone */
+.hero-visual{flex:1 1 380px;min-width:0;position:relative;display:flex;justify-content:center;padding:10px 0 56px}
+.phone{width:250px;background:#16191F;border-radius:38px;padding:12px;box-shadow:0 30px 60px rgba(22,25,31,.22);position:relative}
+.notch{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:84px;height:20px;background:#16191F;border-radius:0 0 12px 12px;z-index:2}
+.ph-screen{background:#F7F6F2;border-radius:28px;padding:34px 14px 18px;display:flex;flex-direction:column;gap:10px;min-height:380px;box-sizing:border-box}
+.ph-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px}
+.ph-card{background:#FFF;border:1px solid #E4E1D8;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.ph-card.dark{background:#16191F;border-color:#16191F;color:#F7F6F2}
+.ph-label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#4A5260}
+.ph-card.dark .ph-label,.ph-card.dark .ph-small{color:#C9CCD3}
+.ph-row{display:flex;justify-content:space-between;font-size:14px}
+.ph-row b{font-variant-numeric:tabular-nums}
+.ph-badge{align-self:flex-start;background:#E6F2EA;color:#1F6B45;font-weight:700;font-size:13px;padding:3px 10px;border-radius:999px;font-variant-numeric:tabular-nums}
+.ph-pct{font-family:'Space Grotesk',sans-serif;font-size:46px;font-weight:700;color:#F5C518;line-height:1;font-variant-numeric:tabular-nums}
+.ph-bar{height:8px;background:#2E3440;border-radius:999px;overflow:hidden}
+.ph-bar div{height:100%;width:0;background:#F5C518;border-radius:999px;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.ph-small{font-size:12px}
+.claim-card{position:absolute;bottom:0;right:4%;background:#FFF;border:1px solid #DEDBD2;border-radius:16px;padding:14px 16px;box-shadow:0 18px 40px rgba(22,25,31,.14);min-width:200px;opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .5s ease}
+.claim-card.in{opacity:1;transform:none}
+.claim-amt{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:#1F6B45;font-variant-numeric:tabular-nums;line-height:1.15}
+.ex-pill{position:absolute;top:0;left:4%;font-size:12px;font-weight:600;color:#4A5260;background:#EFEDE6;padding:4px 10px;border-radius:999px}
+@media (max-width:640px){.claim-card{right:0}.ex-pill{left:0}}
+/* icons in the dark cards */
+.ico{width:46px;height:46px;border-radius:12px;background:#2E3440;display:inline-flex;align-items:center;justify-content:center}
+/* gentle fade-up on scroll */
+.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
+.js .reveal.in{opacity:1;transform:none}
+.js .compare tbody tr{opacity:0;transition:opacity .35s ease}
+.js .compare.in tbody tr{opacity:1}
+@media (prefers-reduced-motion: reduce){
+  .js .reveal,.js .compare tbody tr,.claim-card{opacity:1 !important;transform:none !important;transition:none !important}
+  .ph-bar div{transition:none}
+}
+</style>
 <style>html{scroll-behavior:smooth;scroll-padding-top:90px}
 @media (max-width:640px){.topbar .brand-sub{display:none}.topbar nav a{font-size:14px !important}}
 @media (max-width:640px){
@@ -65,20 +101,31 @@ a{color:#16191F}a:hover{color:#4A5260}
 <p style="margin: 0; font-size: 14px; color: #4A5260">Full kit launches December 15. Founding price C$29 (C$49 at launch), GST/HST included. Nothing to pay today.</p>
 </div>
 
-<div style="flex: 1 1 380px; min-width: 0; background: #FFFFFF; border: 1px solid #DEDBD2; border-radius: 18px; padding: 24px; box-shadow: 0 18px 40px rgba(22,25,31,0.08); display: flex; flex-direction: column; gap: 14px">
-<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap">
-<span style="font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 19px">Your vehicle claim · 2026</span>
-<span style="font-size: 12px; font-weight: 600; color: #4A5260; background: #EFEDE6; padding: 4px 10px; border-radius: 999px">Example figures</span>
+<div class="hero-visual" aria-label="Example: a shift log on a phone working out an 82% business-use percentage and a $6,240.20 vehicle claim">
+<div class="phone" aria-hidden="true">
+<div class="notch"></div>
+<div class="ph-screen">
+<div class="ph-title">Mileage log</div>
+<div class="ph-card">
+<div class="ph-label">Tonight’s shift</div>
+<div class="ph-row"><span>Start</span><b>84,560</b></div>
+<div class="ph-row"><span>End</span><b id="hv-end">84,560</b></div>
+<div class="ph-badge" id="hv-km">+0 business km</div>
 </div>
-<div style="display: flex; flex-direction: column; font-size: 16px">
-<div style="display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid #ECEAE3"><span>Fuel, insurance, repairs &amp; more</span><span style="font-variant-numeric: tabular-nums; font-weight: 600">$7,610.00</span></div>
-<div style="display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid #ECEAE3"><span>Business use (from your log)</span><span style="font-variant-numeric: tabular-nums; font-weight: 600">82%</span></div>
-<div style="display: flex; justify-content: space-between; gap: 12px; padding: 14px 0 4px; font-size: 18px"><span style="font-weight: 700">Vehicle costs you can claim</span><span style="font-variant-numeric: tabular-nums; font-weight: 700; color: #1F6B45">$6,240.20</span></div>
+<div class="ph-card dark">
+<div class="ph-label">Your year so far</div>
+<div class="ph-pct"><span id="hv-pct">0</span>%</div>
+<div class="ph-bar"><div id="hv-bar"></div></div>
+<div class="ph-small">business use of your car</div>
 </div>
-<div style="display: flex; flex-direction: column; gap: 6px; background: #F7F6F2; border-radius: 12px; padding: 14px 16px">
-<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #3A414D">Business-use of vehicle</span><span style="font-weight: 700">82%</span></div>
-<div style="height: 10px; background: #E4E1D8; border-radius: 999px; overflow: hidden"><div style="width: 82%; height: 100%; background: #16191F"></div></div>
 </div>
+</div>
+<div class="claim-card" id="hv-claim" aria-hidden="true">
+<div class="ph-label" style="color:#4A5260">Vehicle costs you can claim</div>
+<div class="claim-amt">$<span id="hv-amt">0.00</span></div>
+<div class="ph-small" style="color:#4A5260">$7,610 in car costs × 82%</div>
+</div>
+<span class="ex-pill">Example figures</span>
 </div>
 </section>
 
@@ -86,18 +133,18 @@ a{color:#16191F}a:hover{color:#4A5260}
 <div style="max-width: 1120px; margin: 0 auto; padding: 72px 24px; display: flex; flex-direction: column; gap: 36px">
 <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 38px; line-height: 1.15; letter-spacing: -0.01em; max-width: 22em">Three things most new drivers find out the hard way</h2>
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px">
-<div style="background: #222731; border-radius: 16px; padding: 26px; display: flex; flex-direction: column; gap: 10px">
-<span style="font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: #F5C518">01</span>
+<div class="reveal" style="background: #222731; border-radius: 16px; padding: 26px; display: flex; flex-direction: column; gap: 10px">
+<span class="ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5C518" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"></path><path d="M9 7h6"></path><path d="M9 11h6"></path><path d="M9 15h4"></path></svg></span>
 <h3 style="margin: 0; font-size: 21px; line-height: 1.3">GST starts with your first fare</h3>
 <p style="margin: 0; color: #C9CCD3">The usual $30,000 small-supplier exemption doesn’t apply to rideshare. You’re required to register, charge and remit GST/HST from day one — even part-time.</p>
 </div>
-<div style="background: #222731; border-radius: 16px; padding: 26px; display: flex; flex-direction: column; gap: 10px">
-<span style="font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: #F5C518">02</span>
+<div class="reveal" style="background: #222731; border-radius: 16px; padding: 26px; display: flex; flex-direction: column; gap: 10px">
+<span class="ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5C518" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18"></path><path d="M8 3v4"></path><path d="M16 3v4"></path></svg></span>
 <h3 style="margin: 0; font-size: 21px; line-height: 1.3">Quiet months still need a return</h3>
 <p style="margin: 0; color: #C9CCD3">A GST/HST return is due for every reporting period, even one where you didn’t drive. Missed filings add up fast.</p>
 </div>
-<div style="background: #222731; border-radius: 16px; padding: 26px; display: flex; flex-direction: column; gap: 10px">
-<span style="font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; color: #F5C518">03</span>
+<div class="reveal" style="background: #222731; border-radius: 16px; padding: 26px; display: flex; flex-direction: column; gap: 10px">
+<span class="ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5C518" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></span>
 <h3 style="margin: 0; font-size: 21px; line-height: 1.3">The CRA already sees your earnings</h3>
 <p style="margin: 0; color: #C9CCD3">Uber and Lyft now report driver earnings to the CRA. Report your income net of the app’s fees instead of gross, and the numbers won’t match — even if your profit is right.</p>
 </div>
@@ -105,7 +152,7 @@ a{color:#16191F}a:hover{color:#4A5260}
 </div>
 </section>
 
-<section id="reserve" style="max-width: 1120px; margin: 0 auto; padding: 80px 24px; display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start">
+<section class="reveal" id="reserve" style="max-width: 1120px; margin: 0 auto; padding: 80px 24px; display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start">
 <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
 <p style="margin: 0; font-size: 14px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #4A5260">Founding drivers</p>
 <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 44px; line-height: 1.1; letter-spacing: -0.01em">Reserve your C$29 founding price</h2>
@@ -138,7 +185,7 @@ a{color:#16191F}a:hover{color:#4A5260}
 </form>
 </section>
 
-<section id="inside" style="max-width: 820px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 24px">
+<section class="reveal" id="inside" style="max-width: 820px; margin: 0 auto; padding: 80px 24px; display: flex; flex-direction: column; gap: 24px">
 <div style="display: flex; flex-direction: column; gap: 12px">
 <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 38px; line-height: 1.15; letter-spacing: -0.01em">Free log or full kit?</h2>
 <p style="margin: 0; font-size: 19px; color: #3A414D">Start with the free mileage log today. When you want your GST, vehicle claim and T2125 worked out for you, the full kit picks up from there.</p>
@@ -172,9 +219,10 @@ a{color:#16191F}a:hover{color:#4A5260}
 </section>
 
 <section style="background: #EFEDE6">
-<div style="max-width: 1120px; margin: 0 auto; padding: 72px 24px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center">
-
-<div style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+<div class="reveal" style="max-width: 1120px; margin: 0 auto; padding: 72px 24px; display: flex; flex-wrap: wrap; gap: 32px; align-items: center">
+<!-- Your photo: save a square photo as peter.jpg in this folder and it appears here automatically. Until then this spot stays hidden. -->
+<div style="flex: 0 0 auto"><img src="peter.jpg" alt="Peter, BC Uber and Lyft driver" width="168" height="168" loading="lazy" onerror="this.parentElement.remove()" style="display: block; width: 168px; height: 168px; border-radius: 50%; object-fit: cover; border: 5px solid #FFFFFF; box-shadow: 0 12px 30px rgba(22,25,31,0.15)"></div>
+<div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
 <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 32px; line-height: 1.2">Built by Peter, BC Uber/Lyft Driver</h2>
 <p style="margin: 0; font-size: 18px; color: #3A414D; max-width: 38em">I drive for Uber and Lyft, and before that I spent 28 years in banking and financial planning. When I went looking for a simple way to track my own GST and mileage, everything I found was American, built for accountants, or both. So I built this. It speaks plain Canadian.</p>
 </div>
@@ -182,7 +230,7 @@ a{color:#16191F}a:hover{color:#4A5260}
 </section>
 
 
-<section style="max-width: 820px; margin: 0 auto; padding: 24px 24px 88px; display: flex; flex-direction: column; gap: 8px">
+<section class="reveal" style="max-width: 820px; margin: 0 auto; padding: 24px 24px 88px; display: flex; flex-direction: column; gap: 8px">
 <h2 style="margin: 0 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 32px">Questions</h2>
 <details style="border-top: 1px solid #DEDBD2; padding: 18px 0">
 <summary style="font-weight: 600; font-size: 18px; cursor: pointer; min-height: 28px">Is this tax advice?</summary>
@@ -210,7 +258,7 @@ a{color:#16191F}a:hover{color:#4A5260}
 </details>
 </section>
 
-<section style="max-width: 820px; margin: 0 auto; padding: 0 24px 72px">
+<section class="reveal" style="max-width: 820px; margin: 0 auto; padding: 0 24px 72px">
 <div style="background: #FFFFFF; border: 1px solid #DEDBD2; border-radius: 16px; padding: 24px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between">
 <div style="display: flex; flex-direction: column; gap: 4px; flex: 1 1 320px; min-width: 0">
 <h2 style="margin: 0; font-family: 'Space Grotesk', sans-serif; font-size: 24px">Know a driver who needs this?</h2>
@@ -302,6 +350,41 @@ document.querySelectorAll('.share-btn').forEach(function (btn) {
       body: JSON.stringify({ source: src, page: 'home' })
     }).catch(function () {});
   } catch (e) {}
+})();
+</script>
+<script>
+/* Hero phone: ticks the odometer, fills the business-use bar, then shows the claim. Shows final numbers if the visitor prefers reduced motion. */
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function (id) { return document.getElementById(id); };
+  function count(el, from, to, ms, fmt, done) {
+    if (reduce) { el.textContent = fmt(to); if (done) done(); return; }
+    var t0 = null;
+    function step(t) { if (!t0) t0 = t; var p = Math.min(1, (t - t0) / ms); var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(from + (to - from) * e); if (p < 1) requestAnimationFrame(step); else if (done) done(); }
+    requestAnimationFrame(step);
+  }
+  var n0 = function (v) { return Math.round(v).toLocaleString('en-CA'); };
+  var n2 = function (v) { return v.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+  setTimeout(function () {
+    count($('hv-end'), 84560, 84771, 1300, n0);
+    count({ set textContent(v) { $('hv-km').textContent = '+' + v + ' business km'; } }, 0, 211, 1300, n0, function () {
+      $('hv-bar').style.width = '82%';
+      count($('hv-pct'), 0, 82, 1200, n0, function () {
+        $('hv-claim').classList.add('in');
+        count($('hv-amt'), 0, 6240.2, 1100, n2);
+      });
+    });
+  }, reduce ? 0 : 500);
+
+  /* Fade sections up as they scroll into view; chart rows appear one after another. */
+  document.querySelectorAll('.compare tbody tr').forEach(function (tr, i) { tr.style.transitionDelay = (i * 45) + 'ms'; });
+  var items = document.querySelectorAll('.reveal, .compare');
+  if (!('IntersectionObserver' in window)) { items.forEach(function (el) { el.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: 0.12 });
+  items.forEach(function (el) { io.observe(el); });
 })();
 </script>
 </body>
