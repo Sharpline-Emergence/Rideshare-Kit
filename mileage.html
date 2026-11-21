@@ -304,12 +304,35 @@ $('shift-form').addEventListener('submit', function (e) {
   data.shifts.push({ id: Date.now().toString(36), date: date, start: start, end: end, note: note });
   sortShifts();
   if (!save()) return;
+  usagePing();
   flash('shift-msg', 'Saved: ' + fmt(end - start) + ' business km.', false);
   $('s-start').value = ''; $('s-end').value = ''; $('s-note').value = '';
   $('s-start').placeholder = 'Last end: ' + end;
   $('year').dataset.pick = date.slice(0, 4);
   render();
 });
+
+/* ===== Usage counter: one anonymous ping per phone when a driver logs their 1st shift, and again at their 5th.
+   Shows up in rtk_visits as page 'tracker-shift1' / 'tracker-shift5'. No personal data, no km figures.
+   Skipped on your own devices (?owner=1) and for bots. ===== */
+function usagePing() {
+  try {
+    if (localStorage.getItem('rtk_owner') || navigator.webdriver) return;
+    if (/bot|crawl|spider|headless|lighthouse/i.test(navigator.userAgent)) return;
+    var n = data.shifts.length, step = n >= 5 ? 5 : n >= 1 ? 1 : 0;
+    data.pinged = data.pinged || {};
+    [1, 5].forEach(function (m) {
+      if (step < m || data.pinged[m]) return;
+      data.pinged[m] = 1; save();
+      var src = ((new URLSearchParams(location.search).get('src') || 'direct').replace(/[^a-z0-9_-]/gi, '').slice(0, 60)) || 'direct';
+      fetch(SUPABASE_URL + '/rest/v1/rtk_visits', {
+        method: 'POST', keepalive: true,
+        headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ source: src, page: 'tracker-shift' + m })
+      }).catch(function () {});
+    });
+  } catch (e) {}
+}
 
 /* ===== Odometer readings for the year ===== */
 ['o-start', 'o-latest'].forEach(function (id) {
