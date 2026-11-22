@@ -93,7 +93,7 @@ details summary{cursor:pointer;font-weight:600}
   <section style="padding-top:22px">
     <p class="eyebrow">Free · for Uber &amp; Lyft drivers in Canada</p>
     <h1>Free rideshare mileage log</h1>
-    <p class="muted" style="margin:0">Enter two odometer numbers each shift. It adds up your business kilometres and works out your <strong>business-use percentage</strong>, the number every vehicle claim depends on. No app, no account. Your log stays on this phone.</p>
+    <p class="muted" style="margin:0">Enter two odometer numbers each shift. It adds up your business kilometres and works out your <strong>business-use percentage</strong>, the number every vehicle claim depends on. No app, no account. Your log stays on this phone. Free to use; after your first 10 shifts we’ll ask for your name and email to keep logging.</p>
   </section>
 
   <!-- Home-screen tip: shown until dismissed -->
@@ -129,6 +129,12 @@ details summary{cursor:pointer;font-weight:600}
       <button class="btn dark full" type="submit">Save shift</button>
       <p id="shift-msg" class="msg" role="status"></p>
     </form>
+    <!-- Email gate: replaces the form after FREE_SHIFTS shifts until the driver signs up -->
+    <div id="gate" class="hidden" style="margin-top:14px">
+      <p style="margin:0 0 10px;font-size:17px"><strong>You’ve logged 10 shifts. Nice work.</strong></p>
+      <p style="margin:0 0 14px;font-size:16px">To keep logging, add your first name and email. It’s still free, and it unlocks right away on this phone. Your shifts so far are safe: you can still see your totals and download a backup below.</p>
+      <a class="btn full" href="#signup" id="gate-btn">Unlock my mileage log</a>
+    </div>
   </section>
 
   <!-- Backup nudge: appears after 10 shifts if no recent backup -->
@@ -203,8 +209,8 @@ details summary{cursor:pointer;font-weight:600}
   <!-- Email sign-up -->
   <section class="card" id="signup">
     <div id="signup-form-wrap">
-      <h2>Free: the rideshare driver tax checklist</h2>
-      <p class="muted" style="margin:8px 0 14px;font-size:16px">Everything the CRA expects from Uber and Lyft drivers on one page. We’ll also send one reminder before tax time to export your mileage log.</p>
+      <h2 id="signup-title">Free: the rideshare driver tax checklist</h2>
+      <p id="signup-intro" class="muted" style="margin:8px 0 14px;font-size:16px">Everything the CRA expects from Uber and Lyft drivers on one page. We’ll also send one reminder before tax time to export your mileage log.</p>
       <form id="signup-form" action="https://formspree.io/f/xkolnkyg" method="post" class="grid">
         <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
         <div>
@@ -216,7 +222,7 @@ details summary{cursor:pointer;font-weight:600}
           <input id="email" name="email" type="email" required autocomplete="email">
         </div>
         <label class="check"><input type="checkbox" name="consent_email" value="Yes" required><span>Yes, email me about the Rideshare Tax Kit, including my founding price when it launches. I can unsubscribe at any time.</span></label>
-        <button type="submit" class="btn full">Send me the free checklist</button>
+        <button type="submit" id="signup-btn" class="btn full">Send me the free checklist</button>
         <p id="signup-msg" class="msg err" role="alert"></p>
         <p class="small" style="margin:0;text-align:center">Free. Your mileage log is never sent anywhere. Sent by Sharpline Emergence Ltd. · <a href="privacy.html">Privacy Policy</a></p>
       </form>
@@ -267,6 +273,7 @@ details summary{cursor:pointer;font-weight:600}
 var SUPABASE_URL = 'https://pvpmjmalwjzqehqbvinp.supabase.co';
 var SUPABASE_KEY = 'sb_publishable_y-M5GWJJZCnAdCIOcKCMZw_EkzbqHIg'; // publishable key: safe in a web page
 var CONSENT_TEXT = 'Yes, email me about the Rideshare Tax Kit, including my founding price when it launches. I can unsubscribe at any time.';
+var FREE_SHIFTS = 10;          // shifts allowed before the email unlock is required
 var BACKUP_NUDGE_AFTER = 10;   // shifts logged before the "back up your log" box appears
 var STORE_KEY = 'rtk_mileage_v1';
 
@@ -290,6 +297,7 @@ var MONTHS = ['January','February','March','April','May','June','July','August',
 function today() { var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
 function flash(id, text, isErr) { var el = $(id); el.textContent = text; el.className = 'msg ' + (isErr ? 'err' : 'ok'); }
 function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function isLocked() { return data.shifts.length >= FREE_SHIFTS && !data.signedUp; }
 function sortShifts() { data.shifts.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : a.start - b.start; }); }
 
 /* ===== Log a shift ===== */
@@ -297,6 +305,7 @@ $('s-date').value = today();
 $('shift-form').addEventListener('submit', function (e) {
   e.preventDefault();
   var date = $('s-date').value, start = Number($('s-start').value), end = Number($('s-end').value), note = $('s-note').value.trim();
+  if (isLocked()) { render(); return; }
   if (!date) return flash('shift-msg', 'Pick the shift date.', true);
   if (!$('s-start').value || !$('s-end').value) return flash('shift-msg', 'Enter both odometer readings.', true);
   if (end <= start) return flash('shift-msg', 'End odometer must be higher than start.', true);
@@ -315,20 +324,21 @@ $('shift-form').addEventListener('submit', function (e) {
 /* ===== Usage counter: one anonymous ping per phone when a driver logs their 1st shift, and again at their 5th.
    Shows up in rtk_visits as page 'tracker-shift1' / 'tracker-shift5'. No personal data, no km figures.
    Skipped on your own devices (?owner=1) and for bots. ===== */
-function usagePing() {
+function usagePing(event) {
   try {
     if (localStorage.getItem('rtk_owner') || navigator.webdriver) return;
     if (/bot|crawl|spider|headless|lighthouse/i.test(navigator.userAgent)) return;
-    var n = data.shifts.length, step = n >= 5 ? 5 : n >= 1 ? 1 : 0;
+    var n = data.shifts.length;
     data.pinged = data.pinged || {};
-    [1, 5].forEach(function (m) {
-      if (step < m || data.pinged[m]) return;
+    var marks = event ? [event] : [1, 5].filter(function (m) { return n >= m; });
+    marks.forEach(function (m) {
+      if (data.pinged[m]) return;
       data.pinged[m] = 1; save();
       var src = ((new URLSearchParams(location.search).get('src') || 'direct').replace(/[^a-z0-9_-]/gi, '').slice(0, 60)) || 'direct';
       fetch(SUPABASE_URL + '/rest/v1/rtk_visits', {
         method: 'POST', keepalive: true,
         headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ source: src, page: 'tracker-shift' + m })
+        body: JSON.stringify({ source: src, page: 'tracker-' + (typeof m === 'number' ? 'shift' + m : m) })
       }).catch(function () {});
     });
   } catch (e) {}
@@ -410,6 +420,15 @@ function render() {
   $('nudge-remind').classList.toggle('hidden', !!data.signedUp);
   $('signup-form-wrap').classList.toggle('hidden', !!data.signedUp);
   $('signup-done').classList.toggle('hidden', !data.signedUp);
+  var locked = isLocked();
+  $('shift-form').classList.toggle('hidden', locked);
+  $('gate').classList.toggle('hidden', !locked);
+  if (locked) {
+    $('signup-title').textContent = 'Unlock your mileage log';
+    $('signup-intro').textContent = 'Add your first name and email to keep logging. Free, and it unlocks right away. You’ll also get the one-page rideshare tax checklist, and one reminder before tax time to back up your log.';
+    $('signup-btn').textContent = 'Unlock and send my checklist';
+    usagePing('gate');
+  }
   $('last-backup').textContent = data.lastExport ? 'Last backup: ' + new Date(data.lastExport).toLocaleDateString('en-CA') : 'No backup downloaded yet.';
 }
 
@@ -421,6 +440,7 @@ $('shift-rows').addEventListener('click', function (e) {
   save(); render();
 });
 
+$('gate-btn').addEventListener('click', function () { setTimeout(function () { $('fname').focus(); }, 400); });
 $('tip-close').addEventListener('click', function () { data.tipHidden = true; save(); render(); });
 $('nudge-close').addEventListener('click', function () { data.nudgeHiddenAt = Date.now(); save(); render(); });
 $('nudge-remind').addEventListener('click', function () { signupSource = 'tracker-backup'; $('signup').scrollIntoView({ behavior: 'smooth' }); setTimeout(function () { $('fname').focus(); }, 500); });
@@ -479,7 +499,8 @@ $('signup-form').addEventListener('submit', async function (e) {
   var fd = new FormData(form);
   if (fd.get('_gotcha')) return;
   var ref = ((new URLSearchParams(location.search).get('src') || '').replace(/[^a-z0-9_-]/gi, '').slice(0, 40));
-  var source = signupSource + (ref ? '-' + ref : '');
+  var wasLocked = isLocked();
+  var source = (wasLocked ? 'tracker-unlock' : signupSource) + (ref ? '-' + ref : '');
   fd.append('source', source);
   btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent = '';
 
@@ -499,7 +520,11 @@ $('signup-form').addEventListener('submit', async function (e) {
   }).then(function (r) { return r.ok || r.status === 409; }).catch(function () { return false; });
 
   var results = await Promise.all([toFormspree, toSupabase]);
-  if (results[0] || results[1]) { data.signedUp = true; save(); render(); return; }
+  if (results[0] || results[1]) {
+    data.signedUp = true; save(); render();
+    if (wasLocked) { flash('shift-msg', 'Unlocked. Log as many shifts as you like.', false); $('shift-form').scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    return;
+  }
   msg.textContent = 'Sorry, that didn’t go through. Please try again in a minute.';
   btn.disabled = false; btn.textContent = 'Send me the free checklist';
 });
