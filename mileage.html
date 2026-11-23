@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="https://ridesharetaxkit.com/mileage.html">
-<title>Free Mileage Tracker for Uber &amp; Lyft Drivers in Canada — Rideshare Tax Kit</title>
-<meta name="description" content="A free, simple mileage log for Canadian Uber and Lyft drivers. Log each shift's odometer readings on your phone and see your business-use percentage for the year. No app, no account.">
+<title>Free Mileage Tracker for Uber, Lyft &amp; Taxi Drivers in Canada — Rideshare Tax Kit</title>
+<meta name="description" content="A free, simple mileage log for Canadian Uber and Lyft drivers, self-employed taxi drivers and chauffeurs. Log each shift's odometer readings on your phone and see your business-use percentage for the year. No app, no account.">
 <meta name="theme-color" content="#16191F">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Mileage Log">
@@ -91,7 +91,7 @@ details summary{cursor:pointer;font-weight:600}
 <main class="wrap" style="padding-bottom:40px">
 
   <section style="padding-top:22px">
-    <p class="eyebrow">Free · for Uber &amp; Lyft drivers in Canada</p>
+    <p class="eyebrow">Free · for Uber &amp; Lyft drivers, self-employed taxi drivers &amp; chauffeurs in Canada</p>
     <h1>Free rideshare mileage log</h1>
     <p class="muted" style="margin:0">Enter two odometer numbers each shift. It adds up your business kilometres and works out your <strong>business-use percentage</strong>, the number every vehicle claim depends on. No app, no account. Your log stays on this phone. Free to use; after your first 10 shifts we’ll ask for your name and email to keep logging. None of your existing data will be lost.</p>
   </section>
@@ -209,8 +209,8 @@ details summary{cursor:pointer;font-weight:600}
   <!-- Email sign-up -->
   <section class="card" id="signup">
     <div id="signup-form-wrap">
-      <h2 id="signup-title">Free: the rideshare driver tax checklist</h2>
-      <p id="signup-intro" class="muted" style="margin:8px 0 14px;font-size:16px">Everything the CRA expects from Uber and Lyft drivers on one page. We’ll also send one reminder before tax time to export your mileage log.</p>
+      <h2 id="signup-title">Free: the rideshare &amp; taxi driver tax checklist</h2>
+      <p id="signup-intro" class="muted" style="margin:8px 0 14px;font-size:16px">Everything the CRA expects from rideshare, taxi and limo drivers on one page. We’ll also send one reminder before tax time to export your mileage log.</p>
       <form id="signup-form" action="https://formspree.io/f/xkolnkyg" method="post" class="grid">
         <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
         <div>
@@ -387,7 +387,7 @@ function render() {
   if (total && !warn) {
     var pct = Math.round(biz / total * 100);
     $('pct').textContent = pct + '%';
-    $('pct-label').textContent = 'Business-use percentage for ' + Y + ': ' + fmt(biz) + ' of ' + fmt(total) + ' km were for Uber or Lyft.';
+    $('pct-label').textContent = 'Business-use percentage for ' + Y + ': ' + fmt(biz) + ' of ' + fmt(total) + ' km were for driving work.';
     $('teaser-pct').textContent = 'your ' + pct + '%';
   } else {
     $('pct').textContent = '–';

@@ -22,7 +22,7 @@ a{color:#16191F}a:hover{color:#4A5260}
 <p style="margin: 0; font-size: 18px; color: #3A414D; line-height: 1.55">We’ll email you when the full kit launches December 15. Nothing to pay until then.</p>
 <div style="background: #FFF8D6; border: 1px solid #F0DC80; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 12px; margin-top: 4px">
 <p style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #4A5260">Bonus for founding drivers</p>
-<p style="margin: 0; font-size: 17px; color: #16191F; line-height: 1.5"><strong>Free one-page tax checklist.</strong> Everything the CRA expects from Uber and Lyft drivers: what to set up, what to log, what you can claim, and the dates not to miss. Save it to your phone or keep a copy in the car.</p>
+<p style="margin: 0; font-size: 17px; color: #16191F; line-height: 1.5"><strong>Free one-page tax checklist.</strong> Everything the CRA expects from rideshare, taxi and limo drivers: what to set up, what to log, what you can claim, and the dates not to miss. Save it to your phone or keep a copy in the car.</p>
 <div style="display: flex; justify-content: center"><a href="Rideshare-Driver-Tax-Checklist.pdf" download style="background: #16191F; color: #FFFFFF; font-weight: 700; font-size: 17px; text-decoration: none; padding: 16px 26px; border-radius: 12px; min-height: 48px; box-sizing: border-box; display: inline-flex; align-items: center">Open the checklist (PDF) →</a></div>
 </div>
 <p style="margin: 8px 0 0; font-size: 16px; color: #3A414D">Know another driver who’d want this?</p>
@@ -39,7 +39,7 @@ document.querySelectorAll('.share-btn').forEach(function (btn) {
     var msg = document.querySelector('.share-msg');
     try {
       if (navigator.share) {
-        await navigator.share({ title: 'Rideshare Tax Kit', text: 'GST, mileage and T2125 sorted for Uber and Lyft drivers in Canada:', url: url });
+        await navigator.share({ title: 'Rideshare Tax Kit', text: 'GST, mileage and T2125 sorted for Uber, Lyft and taxi drivers in Canada:', url: url });
         return;
       }
       await navigator.clipboard.writeText(url);
